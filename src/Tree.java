@@ -1,46 +1,65 @@
 import java.io.Serializable;
 
-public class Tree<E> implements Serializable{
-	Node<E> root;
+public class Tree<E> implements Serializable {
 
-	public E search(int k) {
-		Node<E> current = root;
-		while (current.key != k) {
-			if (k < current.key)
-				current = current.leftChild;
-			else
-				current = current.rightChild;
-			if (current == null)
-				return null;
-		}
-		return current.data;
-	}
+    Node<E> root;
 
-	public void insert(int k, E e) {
-		Node<E> newNode = new Node<E>(k, e);
-		if (root == null)
-			root = newNode;
-		else {
-			Node<E> current = root;
-			Node<E> parent;
-			while (true) {
-				parent = current;
-				if (k < current.key) {
-					current = current.leftChild;
-					if (current == null) {
-						parent.leftChild = newNode;
-						return;
-					}
-				} else {
-					current = current.rightChild;
-					if (current == null) {
-						parent.rightChild = newNode;
-						return;
-					}
-				}
-			}
-		}
-	}
+    /*------------------------------------------------------------
+     * Search
+     *----------------------------------------------------------*/
+    public E search(int k) {
+        Node<E> current = root;
+        while (current != null && current.key != k) {
+            current = (k < current.key) ? current.leftChild : current.rightChild;
+        }
+        return (current == null) ? null : current.data;
+    }
+
+    /*------------------------------------------------------------
+     * NEW: in-order print – returns false when tree empty
+     *----------------------------------------------------------*/
+    public boolean printInOrder() {
+        return printInOrder(root);           // <-- now returns a boolean
+    }
+
+    private boolean printInOrder(Node<E> node) {
+        if (node == null) {
+            return false;                    // nothing printed
+        }
+        printInOrder(node.leftChild);
+        System.out.println(node.data);
+        printInOrder(node.rightChild);
+        return true;                         // at least one node visited
+    }
+
+    /*------------------------------------------------------------
+     * INSERT  /  DELETE  /  UTILITY METHODS
+     * (unchanged from your original file)
+     *----------------------------------------------------------*/
+    public void insert(int k, E e) {
+        Node<E> newNode = new Node<>(k, e);
+        if (root == null) {
+            root = newNode;
+            return;
+        }
+        Node<E> current = root, parent;
+        while (true) {
+            parent = current;
+            if (k < current.key) {
+                current = current.leftChild;
+                if (current == null) {
+                    parent.leftChild = newNode;
+                    return;
+                }
+            } else {
+                current = current.rightChild;
+                if (current == null) {
+                    parent.rightChild = newNode;
+                    return;
+                }
+            }
+        }
+    }
 
 	public boolean delete(int k) {
 		Node<E> current = root;

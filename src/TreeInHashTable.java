@@ -1,100 +1,93 @@
+import java.io.*;
+import java.util.Arrays;
 
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
+/** Hash-table where each bucket is a BST (Tree<Student>). */
 public class TreeInHashTable implements Serializable {
-	 Tree<Student>[] hashArray;
-	int size=0;
-    ObjectOutputStream out;
-    ObjectInputStream In;
 
+    private static final long serialVersionUID = 1L;
+
+    /*------------------------------------------------------------------
+     *  Data
+     *----------------------------------------------------------------*/
+    private final Tree<Student>[] hashArray;           // buckets
+
+    @SuppressWarnings("unchecked")
     public TreeInHashTable(int size) {
-		hashArray = new Tree[size];
-		for (int j = 0; j < hashArray.length; j++)
-			hashArray[j] = new Tree<Student>();
-	}
-	
+        hashArray = new Tree[size];
+        for (int i = 0; i < size; i++) hashArray[i] = new Tree<>();
+    }
 
+    /*------------------------------------------------------------------
+     *  Hash helper  —  QU ID (e.g., 202004552)  →  0-(size-1)
+     *----------------------------------------------------------------*/
+    private int hashFunc(int id) {
+        return Math.floorMod((id / 100000) - 2000, hashArray.length);
+    }
 
-	public void displayTable() {
-		for (int j = 0; j < hashArray.length; j++) {
-			if (hashArray[j] != null) {
-				System.out.println(j + ": ");
-				hashArray[j].traverse(2);
-			}
-			else
-				System.out.println("** ");
-		}
-		
-		System.out.println("--------------------");
-	}
+    /*------------------------------------------------------------------
+     *  Display all students  (in-order within each bucket)
+     *----------------------------------------------------------------*/
+    /** @return <code>true</code> if at least one student printed. */
+    public boolean displayAll() {
+        boolean any = false;
+        for (Tree<Student> bucket : hashArray) {
+            if (bucket != null) any |= bucket.printInOrder();
+        }
+        return any;
+    }
 
-	// -------------------------------------------------------------
-	public int hashFunc(int key) {
-		return (key/100000)-2000;
-	}
-	
+    /*------------------------------------------------------------------
+     *  CRUD
+     *----------------------------------------------------------------*/
+    public void insert(int id, String name, double gpa) {
+        insert(id, new Student(id, name, gpa));
+    }
 
-	public void insert(int id, String name, double gpa) {
-		Student x =new Student(id, name, gpa);
-		insert(id, x);
-	}
+    public void insert(int id, Student s) {
+        hashArray[hashFunc(id)].insert(id % 100000, s);
+    }
 
-	public void insert(int id, Student d) {
-	int hashVal=hashFunc(id);
-	while(hashVal>hashArray.length) {hashVal%=hashArray.length;}
-	hashArray[hashVal].insert(id%100000, d);
-		
-	}
+    public boolean delete(int id) {
+        return hashArray[hashFunc(id)].delete(id % 100000);
+    }
 
-	public boolean delete(int id) {
-		int hashVal=hashFunc(id);
-		return delete(hashVal, id);
-		
-	}
-	public boolean delete(int hash,int id) {
-	while(hash>hashArray.length) {hash%=hashArray.length;}
-		return hashArray[hash].delete(id%100000);
-	}
+    public Student find(int id) {
+        return hashArray[hashFunc(id)].search(id % 100000);
+    }
 
-	public Student find(int id) {
-		int hashVal=hashFunc(id);
-		return find(hashVal, id);
-	}
-	public Student find(int hash, int id) {
-		while(hash>hashArray.length) {hash%=hashArray.length;}
-		return hashArray[hash].search(id%100000);
-	}
+    /*------------------------------------------------------------------
+     *  Persistence
+     *----------------------------------------------------------------*/
+    /** Serialize hashArray to <i>HashArray.dat</i>. */
+    public void exit() throws IOException {
+        try (ObjectOutputStream out =
+                 new ObjectOutputStream(new FileOutputStream("HashArray.dat"))) {
+            out.writeObject(hashArray);
+        }
+    }
 
-	// -------------------------------------------------------------
-public void exit() throws FileNotFoundException, IOException {
-    out= new ObjectOutputStream(new FileOutputStream("HashArray.dat"));
-	out.writeObject(hashArray);
-	out.close();
+    /** Load table from <i>HashArray.dat</i> if it exists; otherwise keep empty. */
+    @SuppressWarnings("unchecked")
+    public void Read() {
+        try (ObjectInputStream in =
+                 new ObjectInputStream(new FileInputStream("HashArray.dat"))) {
+
+            Tree<Student>[] saved = (Tree<Student>[]) in.readObject();
+            for (int i = 0; i < Math.min(saved.length, hashArray.length); i++) {
+                hashArray[i] = saved[i];
+            }
+
+        } catch (FileNotFoundException e) {
+            /* first run – nothing to restore */ 
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*------------------------------------------------------------------
+     *  Debug helper
+     *----------------------------------------------------------------*/
+    public void displayTable() {
+        System.out.println(Arrays.toString(hashArray));
+    }
 }
-
-public void Read() throws FileNotFoundException, IOException, ClassNotFoundException {
-	try {
-		Tree<Student>[] hashArray=null;
-	 In= new ObjectInputStream(new FileInputStream("HashArray.dat"));
-	 hashArray=(Tree<Student>[])In.readObject();
-		In.close();
-		//System.out.println(hashArray);
-	 } catch (FileNotFoundException e) {
-	System.out.println("");
-	 } catch (IOException e) {
-			System.out.println("");
-	
-} catch (ClassNotFoundException e) {
-	System.out.println("");
-}
-
-}
-}
-
