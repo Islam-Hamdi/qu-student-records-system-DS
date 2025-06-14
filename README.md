@@ -54,14 +54,17 @@ Each bucket of the hash table contains a **Binary Search Tree** storing students
 ## 📁 Project Structure
 
 ```
-📂 src/
-├── Node.java                 # Node structure for Tree
-├── Student.java              # Model class for student records
-├── Tree.java                 # Binary Search Tree logic
-├── TreeInHashTable.java      # Hash table with tree buckets
-└── Tester.java               # Main menu and interaction logic
+qu-student-records-system-DS/
+├── src/
+│   ├── Node.java
+│   ├── Student.java
+│   ├── Tree.java
+│   ├── TreeInHashTable.java
+│   └── Tester.java
+├── HashArray.dat       # auto-generated at runtime
+├── screenshots/        # your UI output screenshots
+└── README.md
 
-📄 HashArray.dat              # Serialized data (generated at runtime)
 ```
 
 ---
@@ -88,18 +91,68 @@ Each bucket of the hash table contains a **Binary Search Tree** storing students
 
 ## 📸 Screenshots
 
-Include images such as:
-- Menu on startup
-<img width="591" alt="image" src="https://github.com/user-attachments/assets/a7180bcf-aa73-47f1-885e-3c3f365ab9f5" />
-
-- Insert student console
-- ![image](https://github.com/user-attachments/assets/a2676ce4-c872-4a32-8f3b-7370e244eb75)
-- 
-
-- Search and delete outputs
-- Data serialization confirmation
+Below are key actions performed in the system, with explanations of what happens internally in the data structure.
 
 > *(Place your screenshots in a `/screenshots/` folder if uploading to GitHub)*
+
+---
+
+### 🟢 1. Menu on Startup
+
+![Main Menu](screenshots/main-menu.png)
+
+🧠 *Explanation:*  
+This is the entry point of the program where the user selects one of the core operations. No data structure is affected yet.
+
+---
+
+### 🟩 2. Insert a Student
+
+![Insert Student](screenshots/insert-student.png)
+
+🧠 *Explanation:*  
+- The system parses the **Qatar University ID**, calculates the hash using `(id / 100000) - 2000`, and determines the correct bucket.
+- A **new node is inserted** into the Binary Search Tree (BST) within that bucket, maintaining sorted order by key.
+
+---
+
+### 🟨 3. Prevent Duplicate Insertion
+
+![Duplicate Check](screenshots/duplicate-check.png)
+
+🧠 *Explanation:*  
+Before insertion, the system checks if the BST already contains the key (last 5 digits of ID).  
+If found, it **rejects the insertion** to avoid duplicate entries in the hash bucket’s tree.
+
+---
+
+### 🟦 4. Search & Delete a Student
+
+![Search and Delete](screenshots/search-delete.png)
+
+🧠 *Explanation:*  
+- **Search:** Locates the correct bucket via hashing and performs a **BST search**.
+- **Delete:** If the node is found, it is removed from the tree while preserving BST structure (leaf, one child, or two children case).
+
+---
+
+### 🟪 5. Display All Students
+
+![Display All](screenshots/display-all.png)
+
+🧠 *Explanation:*  
+- Traverses each non-null bucket in the hash array.
+- Calls **in-order traversal** on each BST to print students in sorted order by key (ID suffix).
+
+---
+
+### 🟥 6. Exit & Data Serialization
+
+![Exit Save](screenshots/exit-save.png)
+
+🧠 *Explanation:*  
+- On exit, the entire `Tree<Student>[]` hash array is serialized and written to `HashArray.dat`.
+- Upon restart, the system restores the same tree structures from disk.
 
 ---
 
