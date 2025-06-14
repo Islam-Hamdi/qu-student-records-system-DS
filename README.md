@@ -90,6 +90,8 @@ Each bucket of the hash table contains a **Binary Search Tree** storing students
 
 Include images such as:
 - Menu on startup
+- <img width="591" alt="image" src="https://github.com/user-attachments/assets/a7180bcf-aa73-47f1-885e-3c3f365ab9f5" />
+
 - Insert student console
 - Search and delete outputs
 - Data serialization confirmation
