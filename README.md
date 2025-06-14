@@ -93,8 +93,6 @@ qu-student-records-system-DS/
 
 Below are key actions performed in the system, with explanations of what happens internally in the data structure.
 
-> *(Place your screenshots in a `/screenshots/` folder if uploading to GitHub)*
-
 ---
 
 ### 🟢 1. Menu on Startup
