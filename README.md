@@ -18,8 +18,9 @@ The system models Qatar University's student records management, where each stud
 ```
 1. Insert a new student  
 2. Search for a student  
-3. Delete a student  
-4. Exit and save data
+3. Delete a student
+4. Display all students
+5. Exit and save data
 ```
 
 All records are stored and retrieved using **object serialization**, allowing the program to persist data across sessions.
@@ -28,7 +29,7 @@ All records are stored and retrieved using **object serialization**, allowing th
 
 ## 🚀 Key Features
 
-- ✅ **Insert, Search, Delete** operations via a console interface  
+- ✅ **Insert, Search, Delete, Display** operations via a console interface  
 - 🧠 **Custom data structure** combining Hash Tables and Trees for efficiency  
 - 💾 **Persistent storage** using Java Serialization (`.dat` file)  
 - 📊 **Performance comparison** with alternative ADTs (chaining, nested hash tables, etc.)  
